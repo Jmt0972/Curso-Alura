@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="Es-es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Encriptador de Texto</title>
+        <link rel="stylesheet" href="reset.css">
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
+    </head>
+    
+    <body>
+        <h1 id="alert" class="titulo">Encriptador de texto</h1><img class="logo" src="imagenes/Logo_Bco.png" alt="logoAlura">
+        <main>
+            
+            <section class="entrada-txt">
+                <form id="formulario">
+                    <label class="aviso" for="input-text">Solo Letras Minusculas, sin acentos</label>
+                    <textarea autofocus class="txt-input"  name="input-text" id="input-text" cols="50" rows="5"
+                    placeholder="Ingrese texto aqui"></textarea>
+
+                    <div class="button-container">
+                        <input class="btn" type="submit" value="Encriptar" id="btn-encriptar">
+                        <input class="btn" type="submit" value="Desencriptar" id="btn-desencriptar">
+                    </div>
+                </form> 
+            </section>
+            <section class="caja-mensaje">
+                <label class="label-caja" for="mensaje-txt">texto desencriptado</label>
+                <textarea class="txt-mensaje" id="mensaje-txt" cols="20" rows="50"></textarea>
+                <input class="btn2" type="submit" value="Copiar" id="btn-copiar">
+                <div id="inf">
+                    <img class="muneco" src="imagenes/Muñeco.png" alt="Muneco">
+                    <p class="info-caja"><strong>no hay mensajes</strong> <br><span>Ingrese el texto que desee<br>
+                        encriptar o desencriptar</span></p>
+                </div>    
+            </section>
+            
+        </main>
+        <footer>&copy; 😎 JMT 2022</footer>
+    </body>
+    
+</html>
+
+<script>
+    const inputTexto = document.getElementById("input-text");
+    const btnEncriptar = document.getElementById("btn-encriptar");
+    const btnDesencriptar = document.getElementById("btn-desencriptar");
+    const inputResultado = document.getElementById("mensaje-txt");
+    const btnCopiar = document.getElementById("btn-copiar");
+    var div = document.getElementById("inf");
+    const soloLetras ="^[a-z !ñ]+$";
+    var txtError ="Solo se permiten letras minusculas, sin acentos o simbolos"
+    
+    document.addEventListener("DOMContentLoaded", () => {
+    
+        btnEncriptar.addEventListener("click", encriptarTexto);
+        btnDesencriptar.addEventListener("click", desencriptarTexto);
+        btnCopiar.addEventListener("click", copiarTexto); 
+    });
+    mostrarImgInfo();
+    function mostrarImgInfo(){
+       div.style.display = '';
+    }
+
+    function ocultarImgInfo(){
+       
+        div.style.display = "none"
+      
+    }
+    
+    function encriptarTexto(e) {
+    
+        e.preventDefault();
+        inputResultado.value = " ";
+        let texto = inputTexto.value;
+        if(texto.match(soloLetras)!=null){
+    
+            let palabras = texto.split(" ");
+            let nuevasPalabras = [];
+    
+            for (let palabra of palabras) {
+            palabra = palabra.replaceAll("e","enter");
+            palabra = palabra.replaceAll("i","imes");
+            palabra = palabra.replaceAll("a","ai");
+            palabra = palabra.replaceAll("o","ober");
+            palabra = palabra.replaceAll("u","ufat");      
+    
+            nuevasPalabras.push(palabra);    
+        }
+    
+        const resultado = nuevasPalabras.join(" ");
+        ocultarImgInfo();
+        inputResultado.value = resultado;
+
+      } else {
+        mostrarError(txtError);
+        return;
+      }  
+    }
+    
+    function desencriptarTexto(e) {
+      e.preventDefault();  
+      inputResultado.value = " ";
+      let texto = inputTexto.value;
+        if(texto.match(soloLetras)!=null){
+            let palabras = texto.split(" ");
+            let nuevasPalabras = [];    
+    
+        for (let palabra of palabras) {
+            palabra = palabra.replaceAll("enter","e");
+            palabra = palabra.replaceAll("imes","i");
+            palabra = palabra.replaceAll("ai","a");
+            palabra = palabra.replaceAll("ober","o");
+            palabra = palabra.replaceAll("ufat","u");
+            nuevasPalabras.push(palabra);    
+        }
+    
+        const resultado = nuevasPalabras.join(' ');
+        ocultarImgInfo();
+        inputResultado.value = resultado;
+            } else {
+                mostrarError(txtError);
+                return;
+        }  
+    }
+    
+    function mostrarError(mensaje) {
+      const existeError = document.querySelector(".error");
+    
+      if(!existeError) {
+          const formulario = document.getElementById("alert");
+          const divMensaje = document.createElement("p");
+          divMensaje.classList.add("error");
+    
+          divMensaje.innerText = mensaje;            
+          formulario.appendChild(divMensaje);
+    
+          setTimeout(()=> {
+              divMensaje.remove();
+          }, 3000);
+      }
+    }
+    function copiarTexto(e) {
+        e.preventDefault(); 
+        const mensaje = inputResultado.value;
+        navigator.clipboard.writeText(mensaje);
+        mostrarImgInfo();
+       document.getElementById("mensaje-txt").value = "";
+       /*document.getElementById("input-text").value = "";*/
+       inputTexto.value = "";
+       
+    } 
+    
+    </script>
